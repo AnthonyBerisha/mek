@@ -28,7 +28,7 @@ func Execute() error {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.cobra.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/mek/mek.yaml)")
 	// rootCmd.PersistentFlags().StringP("author", "a", "Anthony Berisha", "author name for copyright attribution")
 	// rootCmd.PersistentFlags().StringVarP(&userLicense, "license", "l", "", "name of license for the project")
 	// rootCmd.PersistentFlags().Bool("viper", true, "use Viper for configuration")
