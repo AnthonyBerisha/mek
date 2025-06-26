@@ -40,14 +40,13 @@ func commandInit() {
 	if fileExists {
 		println("File already exists at path:", configFilePath)
 	} else {
-		println("File does not exist, creating then write")
-		println(configFilePath)
+		println("File does not exist, creating it at path:", configFilePath)
 
 		err := createFile(configFilePath)
 		if err != nil {
 			log.Fatal("Error creating file:", err)
 		} else {
-			println("File created successfully")
+			println("File created successfully at path:", configFilePath)
 		}
 	}
 }

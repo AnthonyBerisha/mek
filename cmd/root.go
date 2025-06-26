@@ -1,16 +1,12 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 )
 
 var (
 	// Used for flags.
-	cfgFile string
+	// cfgFile string
 	// userLicense string
 
 	rootCmd = &cobra.Command{
@@ -20,15 +16,15 @@ var (
 	}
 )
 
-// Execute executes the root command.
+// Executes the root command.
 func Execute() error {
 	return rootCmd.Execute()
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
+	// cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/mek/mek.yaml)")
+	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/mek/mek.yaml)")
 	// rootCmd.PersistentFlags().StringP("author", "a", "Anthony Berisha", "author name for copyright attribution")
 	// rootCmd.PersistentFlags().StringVarP(&userLicense, "license", "l", "", "name of license for the project")
 	// rootCmd.PersistentFlags().Bool("viper", true, "use Viper for configuration")
@@ -41,24 +37,24 @@ func init() {
 	// rootCmd.AddCommand(initCmd)
 }
 
-func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := os.UserHomeDir()
-		cobra.CheckErr(err)
+// func initConfig() {
+// 	if cfgFile != "" {
+// 		// Use config file from the flag.
+// 		viper.SetConfigFile(cfgFile)
+// 	} else {
+// 		// Find home directory.
+// 		home, err := os.UserHomeDir()
+// 		cobra.CheckErr(err)
 
-		// Search config in home directory with name ".cobra" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigType("yaml")
-		viper.SetConfigName(".cobra")
-	}
+// 		// Search config in home directory with name ".cobra" (without extension).
+// 		viper.AddConfigPath(home)
+// 		viper.SetConfigType("yaml")
+// 		viper.SetConfigName(".cobra")
+// 	}
 
-	viper.AutomaticEnv()
+// 	viper.AutomaticEnv()
 
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
-	}
-}
+// 	if err := viper.ReadInConfig(); err == nil {
+// 		fmt.Println("Using config file:", viper.ConfigFileUsed())
+// 	}
+// }
