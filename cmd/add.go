@@ -29,7 +29,7 @@ func commandAdd() {
 	err := checkInit()
 
 	if condition := err != nil; condition {
-		println("Error checking init:", err)
+		println("Error checking init:", err.Error())
 		return
 	}
 

@@ -26,11 +26,11 @@ func commandInit() {
 	var folderPath = getFolderPath()
 
 	if _, err := os.Stat(folderPath); os.IsNotExist(err) {
-		println("Folder does not exist, creating...", err)
+		println("Folder does not exist, creating...", err.Error())
 
 		err := createFolder(folderPath)
 		if err != nil {
-			log.Fatal("Error creating folder at:", folderPath, err)
+			log.Fatal("Error creating folder at:", folderPath, err.Error())
 		}
 	}
 
@@ -44,7 +44,7 @@ func commandInit() {
 
 		err := createFile(configFilePath)
 		if err != nil {
-			log.Fatal("Error creating file:", err)
+			log.Fatal("Error creating file:", err.Error())
 		} else {
 			println("File created successfully at path:", configFilePath)
 		}
@@ -65,7 +65,7 @@ func checkFileExists(path string) bool {
 func getFolderPath() string {
 	configDir, errConfigDir := os.UserHomeDir()
 	if errConfigDir != nil {
-		log.Fatal("Error getting config dir:", errConfigDir)
+		log.Fatal("Error getting config dir:", errConfigDir.Error())
 	}
 
 	configPath := filepath.Join(configDir, "/.config/mek")
@@ -76,7 +76,7 @@ func getFolderPath() string {
 func createFolder(path string) error {
 	err := os.MkdirAll(path, 0755)
 	if err != nil {
-		log.Fatal("Error creating config folder:", err)
+		log.Fatal("Error creating config folder:", err.Error())
 	}
 
 	return err
