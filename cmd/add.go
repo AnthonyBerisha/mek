@@ -1,7 +1,11 @@
 package cmd
 
 import (
+	"errors"
+	"os"
+
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -26,12 +30,6 @@ var addCmd = &cobra.Command{
 }
 
 func commandAdd() {
-	err := checkInit()
-
-	if condition := err != nil; condition {
-		println("Error checking init:", err.Error())
-		return
-	}
 
 	if path == "" {
 		println("Path is required")
@@ -43,4 +41,31 @@ func commandAdd() {
 		return
 	}
 
+	addMakefileToConfig(path, alias)
+
+	// println(pathErr.Error)
+
+}
+
+func addMakefileToConfig(path string, alias string) error {
+	var err error
+
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return errors.New("path is incorrect")
+	}
+
+	viper.Set(alias, path)
+
+	viper.WriteConfig()
+
+	println(viper.ReadInConfig())
+
+	// Open config file
+	// os.OpenFile(configFilePath)
+	// Check path is not in config file
+	// Check alias is not in config file
+	// Write alias=path
+	// Load into memory and split at the = symbole
+
+	return err
 }

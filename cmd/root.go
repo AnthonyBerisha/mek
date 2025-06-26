@@ -1,18 +1,53 @@
 package cmd
 
 import (
+	"fmt"
+	"os"
+	"os/exec"
+	"path/filepath"
+
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
 	// Used for flags.
-	// cfgFile string
+	cfgFile string
 	// userLicense string
 
 	rootCmd = &cobra.Command{
 		Use:   "mek",
 		Short: "mek is a CLI tool to orchestrate your makefiles across different projects",
 		Long:  "",
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			alias := args[0]
+
+			target := args[1]
+
+			if target == "" {
+				fmt.Printf("Missing makefile target")
+				return
+			}
+
+			resolved := viper.GetString(alias)
+			if resolved == "" {
+				fmt.Printf("Unknown alias: %s\n", alias)
+				return
+			}
+
+			dir := filepath.Dir(resolved)
+
+			execCmd := exec.Command("make", target)
+			execCmd.Dir = dir
+			execCmd.Stdout = os.Stdout
+			execCmd.Stderr = os.Stderr
+			execCmd.Stdin = os.Stdin
+
+			if err := execCmd.Run(); err != nil {
+				fmt.Println("Error running command:", err)
+			}
+		},
 	}
 )
 
@@ -22,7 +57,7 @@ func Execute() error {
 }
 
 func init() {
-	// cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(initConfig)
 
 	// rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.config/mek/mek.yaml)")
 	// rootCmd.PersistentFlags().StringP("author", "a", "Anthony Berisha", "author name for copyright attribution")
@@ -37,24 +72,36 @@ func init() {
 	// rootCmd.AddCommand(initCmd)
 }
 
-// func initConfig() {
-// 	if cfgFile != "" {
-// 		// Use config file from the flag.
-// 		viper.SetConfigFile(cfgFile)
-// 	} else {
-// 		// Find home directory.
-// 		home, err := os.UserHomeDir()
-// 		cobra.CheckErr(err)
+func initConfig() {
 
-// 		// Search config in home directory with name ".cobra" (without extension).
-// 		viper.AddConfigPath(home)
-// 		viper.SetConfigType("yaml")
-// 		viper.SetConfigName(".cobra")
-// 	}
+	home, _ := os.UserHomeDir()
 
-// 	viper.AutomaticEnv()
+	viper.AddConfigPath(filepath.Join(home, ".config/mek"))
 
-// 	if err := viper.ReadInConfig(); err == nil {
-// 		fmt.Println("Using config file:", viper.ConfigFileUsed())
-// 	}
-// }
+	viper.SetConfigName("mek")
+	viper.SetConfigType("yaml")
+
+	if err := viper.ReadInConfig(); err != nil {
+		// Do nothing now ?
+	}
+
+	// if cfgFile != "" {
+	// 	// Use config file from the flag.
+	// 	viper.SetConfigFile(cfgFile)
+	// } else {
+	// 	// Find home directory.
+	// 	home, err := os.UserHomeDir()
+	// 	cobra.CheckErr(err)
+
+	// 	// Search config in home directory with name ".cobra" (without extension).
+	// 	viper.AddConfigPath(home)
+	// 	viper.SetConfigType("yaml")
+	// 	viper.SetConfigName(".cobra")
+	// }
+
+	// viper.AutomaticEnv()
+
+	// if err := viper.ReadInConfig(); err == nil {
+	// 	fmt.Println("Using config file:", viper.ConfigFileUsed())
+	// }
+}
